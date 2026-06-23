@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Payment Dashboard — NursePrep</title>
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM (Embedded for self-containment & robustness)
+       ============================================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --clr-bg:             #0D0F1A;
+      --clr-surface:        #141727;
+      --clr-surface-2:      #1C2035;
+      --clr-surface-3:      #232840;
+      --clr-primary:        #6C63FF;
+      --clr-primary-light:  #8A84FF;
+      --clr-primary-glow:   rgba(108, 99, 255, 0.25);
+      --clr-accent:         #00D4AA;
+      --clr-success:        #10B981;
+      --clr-danger:         #EF4444;
+      --clr-warn:           #F59E0B;
+      --clr-border:         rgba(255,255,255,0.07);
+      --clr-border-hover:   rgba(255,255,255,0.14);
+      --clr-text-primary:   #F0F2FF;
+      --clr-text-secondary: #8B90B3;
+      --clr-text-muted:     #4E5370;
+      --radius-sm:          8px;
+      --radius-md:          12px;
+      --radius-lg:          18px;
+      --transition:         all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--clr-bg);
+      color: var(--clr-text-primary);
+      line-height: 1.6;
+      padding: 30px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ──────────────────────────────────────────── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--clr-border);
+      padding-bottom: 20px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      font-size: 2.2rem;
+    }
+
+    .logo-text h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f0f2ff, var(--clr-primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-text p {
+      font-size: 0.8rem;
+      color: var(--clr-text-secondary);
+      font-weight: 500;
+    }
+
+    .back-btn {
+      padding: 10px 18px;
+      background: var(--clr-surface-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      color: var(--clr-text-primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--clr-surface-3);
+      border-color: var(--clr-border-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── Stats Summary ────────────────────────────────────── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .summary-card__label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--clr-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .summary-card__value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--clr-text-primary);
+    }
+
+    .summary-card__value.pending { color: var(--clr-warn); }
+    .summary-card__value.approved { color: var(--clr-success); }
+    .summary-card__value.rejected { color: var(--clr-danger); }
+
+    /* ── Main View Card ────────────────────────────────────── */
+    .dashboard-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: var(--clr-surface-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      color: var(--clr-text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--clr-border-hover);
+      color: var(--clr-text-primary);
+    }
+
+    .filter-btn.active {
+      background: var(--clr-primary);
+      border-color: var(--clr-primary);
+      color: #fff;
+      box-shadow: 0 0 10px var(--clr-primary-glow);
+    }
+
+    /* ── Submissions Table ─────────────────────────────────── */
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--clr-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: var(--clr-surface-2);
+      padding: 14px 16px;
+      font-weight: 600;
+      color: var(--clr-text-secondary);
+      border-bottom: 2px solid var(--clr-border);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--clr-border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,0.015);
+    }
+
+    .student-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .student-name {
+      font-weight: 700;
+      color: var(--clr-text-primary);
+    }
+
+    .student-email {
+      font-size: 0.78rem;
+      color: var(--clr-text-secondary);
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--clr-primary-light);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+    }
+
+    .method-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.74rem;
+      font-weight: 600;
+      background: var(--clr-surface-2);
+      border: 1px solid var(--clr-border);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge.pending { background: rgba(245, 158, 11, 0.15); color: var(--clr-warn); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-badge.approved { background: rgba(16, 185, 129, 0.15); color: var(--clr-success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-badge.rejected { background: rgba(239, 68, 68, 0.15); color: var(--clr-danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .receipt-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--clr-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .receipt-link:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
+
+    .payment-details {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-width: 250px;
+    }
+
+    .detail-label {
+      font-size: 0.68rem;
+      color: var(--clr-text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      font-size: 0.78rem;
+      font-family: monospace;
+      color: var(--clr-text-primary);
+      word-break: break-all;
+    }
+
+    .no-details {
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      font-style: italic;
+    }
+
+    /* ── Action buttons ────────────────────────────────────── */
+    .actions-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 180px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+
+    .action-btn.approve {
+      background: var(--clr-success);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .action-btn.approve:hover {
+      background: #0ea5e9; /* custom bright green/cyan hover */
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .action-btn.reject {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--clr-danger);
+    }
+
+    .action-btn.reject:hover {
+      background: var(--clr-danger);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .reject-form {
+      display: none;
+      margin-top: 8px;
+      animation: slideDown 0.2s ease;
+    }
+
+    .reject-form.visible {
+      display: block;
+    }
+
+    .reject-input {
+      width: 100%;
+      background: var(--clr-surface-3);
+      border: 1px solid var(--clr-border);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      color: var(--clr-text-primary);
+      outline: none;
+      margin-bottom: 6px;
+      font-family: inherit;
+    }
+
+    .reject-input:focus {
+      border-color: var(--clr-danger);
+    }
+
+    .reject-submit-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .reject-sub-btn {
+      flex: 1;
+      padding: 5px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .reject-sub-btn.confirm {
+      background: var(--clr-danger);
+      color: #fff;
+    }
+
+    .reject-sub-btn.cancel {
+      background: var(--clr-surface-2);
+      color: var(--clr-text-secondary);
+      border: 1px solid var(--clr-border);
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--clr-text-secondary);
+    }
+
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ── Toast ─────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--clr-surface-2);
+      border: 1px solid var(--clr-primary);
+      border-left: 4px solid var(--clr-primary);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      color: var(--clr-text-primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success { border-color: var(--clr-success); border-left-color: var(--clr-success); }
+    .toast.error { border-color: var(--clr-danger); border-left-color: var(--clr-danger); }
+
+    /* ── Date helper ───────────────────────────────────────── */
+    .date-val {
+      font-size: 0.75rem;
+      color: var(--clr-text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-section">
+      <span class="logo-icon" aria-hidden="true">🛠️</span>
+      <div class="logo-text">
+        <h1>NursePrep Admin</h1>
+        <p>Student Payment Verification Hub</p>
+      </div>
+    </div>
+    <a href="javascript:history.back()" class="back-btn">
+      <span>←</span> Back to Dashboard
+    </a>
+  </header>
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card__label">Total Submissions</div>
+      <div class="summary-card__value" id="stat-total">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__label">Pending Review</div>
+      <div class="summary-card__value pending" id="stat-pending">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__label">Approved Accounts</div>
+      <div class="summary-card__value approved" id="stat-approved">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__label">Rejected Receipts</div>
+      <div class="summary-card__value rejected" id="stat-rejected">0</div>
+    </div>
+  </div>
+
+  <!-- Main Submissions Card -->
+  <div class="dashboard-card">
+    <div class="card-header-row">
+      <div class="card-title">
+        <span>📋</span> Payment Verification Requests
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" data-filter="pending" id="filter-pending">Pending Reviews</button>
+        <button class="filter-btn" data-filter="all" id="filter-all">All Submissions</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="requests-table">
+        <thead>
+          <tr>
+            <th>Date / Time</th>
+            <th>Student Info</th>
+            <th>Plan</th>
+            <th>Gateway Method</th>
+            <th>Entered details / Receipt</th>
+            <th>Status / Review Note</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Populated by JS -->
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">Loading submissions...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast element -->
+<div class="toast" id="toast-notify">Notification message here</div>
+
+<!-- JS logic -->
+<script>
+  "use strict";
+
+  const API_URL = "/api/payments";
+  let allRequests = [];
+  let currentFilter = "pending"; // "pending" | "all"
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchRequests();
+
+    // Wire up filter buttons
+    document.getElementById("filter-pending").addEventListener("click", () => switchFilter("pending"));
+    document.getElementById("filter-all").addEventListener("click", () => switchFilter("all"));
+  });
+
+  async function fetchRequests() {
+    try {
+      const res = await fetch(`${API_URL}/requests`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      allRequests = data.requests || [];
+      
+      calculateStats();
+      renderTable();
+    } catch (err) {
+      console.error("[Admin] Failed to load requests:", err);
+      showToast(`Failed to load payment requests: ${err.message}`, "error");
+      document.getElementById("table-body").innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <span class="empty-state__icon">⚠️</span>
+              Failed to connect to backend API server. Make sure it is running on port 3001.
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+  }
+
+  function calculateStats() {
+    const total = allRequests.length;
+    const pending = allRequests.filter(r => r.status === "pending_verification").length;
+    const approved = allRequests.filter(r => r.status === "approved").length;
+    const rejected = allRequests.filter(r => r.status === "rejected").length;
+
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-pending").textContent = pending;
+    document.getElementById("stat-approved").textContent = approved;
+    document.getElementById("stat-rejected").textContent = rejected;
+  }
+
+  function switchFilter(filter) {
+    currentFilter = filter;
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.filter === filter);
+    });
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById("table-body");
+    
+    // Filter list
+    const filtered = allRequests.filter(r => {
+      if (currentFilter === "pending") return r.status === "pending_verification";
+      return true; // "all"
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <span class="empty-state__icon">🎉</span>
+              No ${currentFilter === "pending" ? "pending" : ""} payment requests found.
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = "";
+    filtered.forEach(req => {
+      const tr = document.createElement("tr");
+      
+      // Formatting date
+      const dateStr = new Date(req.submitted_at).toLocaleString("en-US", {
+        month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"
+      });
+
+      // Gateway method formatting
+      let gatewayStr = "";
+      if (req.payment_method === "wallet") {
+        const walletEmojis = { easypaisa: "💚", jazzcash: "🔴", upay: "🔵" };
+        const emoji = walletEmojis[req.wallet_type] || "📱";
+        const label = req.wallet_type ? req.wallet_type.toUpperCase() : "Wallet";
+        gatewayStr = `<span class="method-badge">${emoji} ${label}</span>`;
+      } else {
+        gatewayStr = `<span class="method-badge">🏦 Bank Transfer / Raast</span>`;
+      }
+
+      // Receipt/Details display
+      let detailsHtml = "";
+      if (req.payment_method === "wallet") {
+        detailsHtml = `
+          <div class="payment-details">
+            <span class="detail-label">Sender Number</span>
+            <span class="detail-value">${escHtml(req.sender_number)}</span>
+            <span class="detail-label">Transaction ID (TID)</span>
+            <span class="detail-value">${escHtml(req.transaction_id)}</span>
+          </div>
+        `;
+      } else {
+        const linkPath = `/uploads/receipts/${req.receipt_filename}`;
+        detailsHtml = `
+          <div class="payment-details">
+            <span class="detail-label">Receipt Image</span>
+            <a href="${linkPath}" target="_blank" class="receipt-link" title="Click to view file in new window">
+              📄 View Receipt File ↗
+            </a>
+            <span class="detail-value" style="font-size:0.7rem; color:var(--clr-text-muted)">
+              Size: ${req.receipt_size_kb || 0} KB
+            </span>
+          </div>
+        `;
+      }
+
+      // Review notes / Status display
+      let statusNotesHtml = `
+        <span class="status-badge ${req.status}">${req.status.replace("_", " ")}</span>
+      `;
+      if (req.status !== "pending_verification" && req.review_notes) {
+        statusNotesHtml += `
+          <div style="font-size:0.78rem; color:var(--clr-text-secondary); margin-top:6px; font-style:italic">
+            "${escHtml(req.review_notes)}"
+          </div>
+        `;
+      }
+
+      // Actions buttons UI
+      let actionsHtml = "";
+      if (req.status === "pending_verification") {
+        actionsHtml = `
+          <div class="actions-cell" id="actions-${req.request_id}">
+            <div class="btn-row">
+              <button class="action-btn approve" onclick="approvePayment('${req.request_id}')">
+                ✓ Approve
+              </button>
+              <button class="action-btn reject" onclick="showRejectForm('${req.request_id}')">
+                ✗ Reject
+              </button>
+            </div>
+            
+            <div class="reject-form" id="reject-form-${req.request_id}">
+              <input type="text" class="reject-input" id="reject-reason-${req.request_id}" 
+                placeholder="Reason (e.g. Blurry screenshot)" required />
+              <div class="reject-submit-row">
+                <button class="reject-sub-btn confirm" onclick="submitRejection('${req.request_id}')">
+                  Confirm
+                </button>
+                <button class="reject-sub-btn cancel" onclick="hideRejectForm('${req.request_id}')">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        actionsHtml = `
+          <span style="font-size: 0.78rem; color: var(--clr-text-muted);">
+            Reviewed at<br/>${req.reviewed_at ? new Date(req.reviewed_at).toLocaleDateString() : 'N/A'}
+          </span>
+        `;
+      }
+
+      tr.innerHTML = `
+        <td><span class="date-val">${dateStr}</span></td>
+        <td>
+          <div class="student-info">
+            <span class="student-name">${escHtml(req.sender_name)}</span>
+            <span class="student-email">${escHtml(req.sender_email || 'No email')}</span>
+          </div>
+        </td>
+        <td><span class="plan-badge">${escHtml(req.plan_label)}</span></td>
+        <td>${gatewayStr}</td>
+        <td>${detailsHtml}</td>
+        <td>${statusNotesHtml}</td>
+        <td>${actionsHtml}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── API Actions ─────────────────────────────────────────
+
+  async function approvePayment(requestId) {
+    if (!confirm("Are you sure you want to APPROVE this payment?\nThis will activate their account status to active premium.")) return;
+    
+    setLoading(requestId, true);
+
+    try {
+      const res = await fetch(`${API_URL}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ request_id: requestId })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+      showToast("Payment request approved successfully! Premium activated.", "success");
+      fetchRequests(); // reload
+    } catch (err) {
+      console.error("[Admin] Approve error:", err);
+      showToast(`Approval failed: ${err.message}`, "error");
+      setLoading(requestId, false);
+    }
+  }
+
+  function showRejectForm(requestId) {
+    document.getElementById(`reject-form-${requestId}`).classList.add("visible");
+  }
+
+  function hideRejectForm(requestId) {
+    document.getElementById(`reject-form-${requestId}`).classList.remove("visible");
+  }
+
+  async function submitRejection(requestId) {
+    const reasonInput = document.getElementById(`reject-reason-${requestId}`);
+    const reason = reasonInput.value.trim();
+    
+    if (!reason) {
+      alert("Please provide a rejection reason.");
+      reasonInput.focus();
+      return;
+    }
+
+    setLoading(requestId, true);
+
+    try {
+      const res = await fetch(`${API_URL}/reject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ request_id: requestId, reason: reason })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+      showToast(`Payment rejected: "${reason}"`, "success");
+      fetchRequests(); // reload
+    } catch (err) {
+      console.error("[Admin] Reject error:", err);
+      showToast(`Rejection failed: ${err.message}`, "error");
+      setLoading(requestId, false);
+    }
+  }
+
+  function setLoading(requestId, loading) {
+    const cell = document.getElementById(`actions-${requestId}`);
+    if (!cell) return;
+    if (loading) {
+      cell.innerHTML = `
+        <div style="font-size: 0.8rem; color: var(--clr-primary-light); font-weight: 600; display:flex; align-items:center; gap:6px;">
+          ⏳ Processing...
+        </div>
+      `;
+    }
+  }
+
+  function showToast(message, type = "success") {
+    const toast = document.getElementById("toast-notify");
+    if (!toast) return;
+    
+    toast.className = `toast visible ${type}`;
+    toast.textContent = message;
+
+    setTimeout(() => {
+      toast.classList.remove("visible");
+    }, 4000);
+  }
+
+  function escHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+</script>
+</body>
+</html>

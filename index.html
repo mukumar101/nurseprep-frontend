@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NursePrep — Your personal nursing exam study hub. Track progress, practice questions, and prepare for NCLEX, DHA, MOH and OMSB exams." />
+  <title>Student Hub — NursePrep</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+    <!-- Logo -->
+    <div class="sidebar__logo">
+      <div class="sidebar__logo-icon" aria-hidden="true">🩺</div>
+      <div class="sidebar__logo-text">
+        <span class="sidebar__logo-title">NursePrep</span>
+        <span class="sidebar__logo-subtitle">Exam Platform</span>
+      </div>
+    </div>
+
+    <!-- Student profile chip -->
+    <div class="sidebar__profile">
+      <div class="sidebar__avatar" aria-hidden="true">MA</div>
+      <div class="sidebar__profile-info">
+        <div class="sidebar__profile-name">Mukesh A.</div>
+        <div class="sidebar__profile-tag">NCLEX Candidate</div>
+      </div>
+      <div class="sidebar__streak" title="Study streak">
+        🔥 <span id="streak-count">12</span>d
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar__nav" aria-label="Site sections">
+
+      <div class="sidebar__section-label">Overview</div>
+
+      <a href="#" class="nav-item active" id="nav-dashboard" aria-current="page">
+        <span class="nav-item__icon" aria-hidden="true">🏠</span>
+        <span class="nav-item__label">Dashboard</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-progress">
+        <span class="nav-item__icon" aria-hidden="true">📊</span>
+        <span class="nav-item__label">My Progress</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-schedule">
+        <span class="nav-item__icon" aria-hidden="true">📅</span>
+        <span class="nav-item__label">Study Schedule</span>
+        <span class="nav-item__badge warn">3</span>
+      </a>
+
+      <div class="sidebar__section-label">Practice</div>
+
+      <a href="#" class="nav-item" id="nav-questions">
+        <span class="nav-item__icon" aria-hidden="true">🧠</span>
+        <span class="nav-item__label">Question Bank</span>
+        <span class="nav-item__badge">847</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-mock">
+        <span class="nav-item__icon" aria-hidden="true">📝</span>
+        <span class="nav-item__label">Mock Exams</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-flashcards">
+        <span class="nav-item__icon" aria-hidden="true">🗂️</span>
+        <span class="nav-item__label">Flashcards</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-weakspots">
+        <span class="nav-item__icon" aria-hidden="true">🎯</span>
+        <span class="nav-item__label">Weak Spots</span>
+        <span class="nav-item__badge" style="background:#EF4444;">5</span>
+      </a>
+
+      <div class="sidebar__section-label">Exams</div>
+
+      <a href="#" class="nav-item" id="nav-nclex">
+        <span class="nav-item__icon" aria-hidden="true">🇺🇸</span>
+        <span class="nav-item__label">NCLEX</span>
+        <span class="nav-item__badge success">Active</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-dha">
+        <span class="nav-item__icon" aria-hidden="true">🇦🇪</span>
+        <span class="nav-item__label">DHA / MOH</span>
+      </a>
+
+      <a href="#" class="nav-item" id="nav-omsb">
+        <span class="nav-item__icon" aria-hidden="true">🇴🇲</span>
+        <span class="nav-item__label">OMSB</span>
+      </a>
+
+      <div class="sidebar__section-label">Account</div>
+
+      <a href="#" class="nav-item" id="nav-settings">
+        <span class="nav-item__icon" aria-hidden="true">⚙️</span>
+        <span class="nav-item__label">Settings</span>
+      </a>
+
+    </nav>
+
+    <!-- Footer chip -->
+    <div class="sidebar__footer">
+      <div class="sidebar__exam-chip">
+        <div class="sidebar__exam-chip-dot"></div>
+        <div class="sidebar__exam-chip-info">
+          <div class="sidebar__exam-chip-label">Target exam</div>
+          <div class="sidebar__exam-chip-value" id="target-exam">NCLEX-RN · Aug 2026</div>
+        </div>
+      </div>
+
+      <!-- Upgrade CTA -->
+      <button class="sidebar__upgrade-btn" id="btn-open-upgrade" aria-haspopup="dialog" aria-label="Upgrade to Premium plan">
+        <span>👑</span> Upgrade to Premium
+        <span class="btn-arrow">▶</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════ -->
+  <header class="header" role="banner">
+
+    <div class="header__left">
+      <span class="header__greeting" id="header-greeting">Good morning, Mukesh 👋</span>
+      <span class="header__date" id="header-date">Monday, June 23, 2026</span>
+    </div>
+
+    <div class="header__right">
+      <!-- Search -->
+      <div class="header__search" role="search">
+        <span class="header__search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="global-search"
+          placeholder="Search questions, topics…"
+          aria-label="Search questions and topics"
+        />
+      </div>
+
+      <!-- Notification bell -->
+      <button class="header__btn" id="btn-notifications" aria-label="View notifications">
+        🔔
+        <span class="header__btn-dot" aria-hidden="true"></span>
+      </button>
+
+      <!-- Bookmark -->
+      <button class="header__btn" id="btn-bookmarks" aria-label="View bookmarked questions">
+        🔖
+      </button>
+
+      <!-- CTA -->
+      <button class="header__start-btn" id="btn-start-practice" aria-label="Start a practice session">
+        ▶ Start Practice
+      </button>
+    </div>
+
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN
+  ════════════════════════════════════════════════ -->
+  <main class="main" role="main">
+
+    <!-- ══════════════════════════════
+         LEFT COLUMN
+    ═══════════════════════════════ -->
+    <div class="col-left">
+
+      <!-- ── Stat Cards Row ───────────────────────── -->
+      <div class="stats-row" aria-label="Study statistics">
+
+        <!-- Total Questions Done -->
+        <div class="stat-card stat-card--primary">
+          <div class="stat-card__top">
+            <div class="stat-card__icon-wrap" aria-hidden="true">🧠</div>
+            <span class="stat-card__delta up" aria-label="Up 8% from last week">+8%</span>
+          </div>
+          <div class="stat-card__value" id="stat-total-questions">1,284</div>
+          <div class="stat-card__label">Questions Answered</div>
+        </div>
+
+        <!-- Accuracy -->
+        <div class="stat-card stat-card--success">
+          <div class="stat-card__top">
+            <div class="stat-card__icon-wrap" aria-hidden="true">🎯</div>
+            <span class="stat-card__delta up">+4%</span>
+          </div>
+          <div class="stat-card__value" id="stat-accuracy">73%</div>
+          <div class="stat-card__label">Overall Accuracy</div>
+        </div>
+
+        <!-- Study Streak -->
+        <div class="stat-card stat-card--warn">
+          <div class="stat-card__top">
+            <div class="stat-card__icon-wrap" aria-hidden="true">🔥</div>
+            <span class="stat-card__delta up">+2d</span>
+          </div>
+          <div class="stat-card__value" id="stat-streak">12</div>
+          <div class="stat-card__label">Day Study Streak</div>
+        </div>
+
+        <!-- Readiness Score -->
+        <div class="stat-card stat-card--accent">
+          <div class="stat-card__top">
+            <div class="stat-card__icon-wrap" aria-hidden="true">📈</div>
+            <span class="stat-card__delta up">+6%</span>
+          </div>
+          <div class="stat-card__value" id="stat-readiness">68%</div>
+          <div class="stat-card__label">Exam Readiness</div>
+        </div>
+
+      </div>
+
+      <!-- ── Quick Actions ──────────────────────────── -->
+      <div class="card">
+        <div class="card__header">
+          <h2 class="card__title"><span class="card__title-icon" aria-hidden="true">⚡</span>Quick Actions</h2>
+        </div>
+        <div class="quick-actions">
+
+          <button class="quick-action-btn" id="qaction-timed" aria-label="Start a timed 25-question session">
+            <span class="quick-action-btn__icon" aria-hidden="true">⏱️</span>
+            <span class="quick-action-btn__label">Timed Session</span>
+          </button>
+
+          <button class="quick-action-btn" id="qaction-weak" aria-label="Practice your weakest topics">
+            <span class="quick-action-btn__icon" aria-hidden="true">🎯</span>
+            <span class="quick-action-btn__label">Weak Topics</span>
+          </button>
+
+          <button class="quick-action-btn" id="qaction-random" aria-label="Start a random mixed question set">
+            <span class="quick-action-btn__icon" aria-hidden="true">🎲</span>
+            <span class="quick-action-btn__label">Random Mix</span>
+          </button>
+
+          <button class="quick-action-btn" id="qaction-cardio" aria-label="Practice cardiovascular questions">
+            <span class="quick-action-btn__icon" aria-hidden="true">❤️</span>
+            <span class="quick-action-btn__label">Cardiovascular</span>
+          </button>
+
+          <button class="quick-action-btn" id="qaction-pharm" aria-label="Practice pharmacology questions">
+            <span class="quick-action-btn__icon" aria-hidden="true">💊</span>
+            <span class="quick-action-btn__label">Pharmacology</span>
+          </button>
+
+          <button class="quick-action-btn" id="qaction-sata" aria-label="Practice select all that apply questions">
+            <span class="quick-action-btn__icon" aria-hidden="true">✅</span>
+            <span class="quick-action-btn__label">SATA Only</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ── Category Performance ──────────────────── -->
+      <div class="card">
+        <div class="card__header">
+          <h2 class="card__title"><span class="card__title-icon" aria-hidden="true">📊</span>Category Performance</h2>
+          <span class="card__action" id="view-all-categories" role="button" tabindex="0">View All →</span>
+        </div>
+        <div class="progress-list" id="category-progress-list" aria-label="Category performance breakdown">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- ── Recent Activity ───────────────────────── -->
+      <div class="card">
+        <div class="card__header">
+          <h2 class="card__title"><span class="card__title-icon" aria-hidden="true">🕐</span>Recent Activity</h2>
+          <span class="card__action" id="view-all-activity" role="button" tabindex="0">View All →</span>
+        </div>
+        <ul class="activity-list" id="activity-list" aria-label="Recent question activity">
+          <!-- Populated by JavaScript -->
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════
+         RIGHT COLUMN
+    ═══════════════════════════════ -->
+    <div class="col-right">
+
+      <!-- ── Exam Countdown ────────────────────────── -->
+      <div class="exam-countdown" role="status" aria-label="Days until your exam">
+        <div class="exam-countdown__label">Days Until NCLEX-RN</div>
+        <div class="exam-countdown__days" id="countdown-days">61</div>
+        <div class="exam-countdown__sub">August 23, 2026 · Keep pushing!</div>
+        <button class="exam-countdown__btn" id="btn-study-plan">
+          📋 View Study Plan
+        </button>
+      </div>
+
+      <!-- ── Calendar ──────────────────────────────── -->
+      <div class="card calendar" id="calendar-card" aria-label="Study calendar">
+        <div class="card__header">
+          <h2 class="card__title"><span class="card__title-icon" aria-hidden="true">📅</span>Study Calendar</h2>
+        </div>
+
+        <div class="calendar__nav">
+          <button class="calendar__nav-btn" id="cal-prev" aria-label="Previous month">◀</button>
+          <span class="calendar__month-label" id="cal-month-label">June 2026</span>
+          <button class="calendar__nav-btn" id="cal-next" aria-label="Next month">▶</button>
+        </div>
+
+        <div class="calendar__grid" id="cal-grid" role="grid" aria-label="Calendar grid">
+          <!-- Day labels -->
+          <div class="calendar__day-label" aria-hidden="true">Su</div>
+          <div class="calendar__day-label" aria-hidden="true">Mo</div>
+          <div class="calendar__day-label" aria-hidden="true">Tu</div>
+          <div class="calendar__day-label" aria-hidden="true">We</div>
+          <div class="calendar__day-label" aria-hidden="true">Th</div>
+          <div class="calendar__day-label" aria-hidden="true">Fr</div>
+          <div class="calendar__day-label" aria-hidden="true">Sa</div>
+          <!-- Days injected by JS -->
+        </div>
+
+        <div class="calendar__legend" aria-hidden="true">
+          <div class="calendar__legend-item">
+            <div class="calendar__legend-dot" style="background:var(--clr-primary)"></div>Today
+          </div>
+          <div class="calendar__legend-item">
+            <div class="calendar__legend-dot" style="background:var(--clr-accent)"></div>Studied
+          </div>
+          <div class="calendar__legend-item">
+            <div class="calendar__legend-dot" style="background:var(--clr-warn)"></div>Exam
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Upcoming Sessions ─────────────────────── -->
+      <div class="card">
+        <div class="card__header">
+          <h2 class="card__title"><span class="card__title-icon" aria-hidden="true">🗓️</span>Upcoming Sessions</h2>
+          <span class="card__action" id="add-session" role="button" tabindex="0">+ Add</span>
+        </div>
+        <div class="sessions-list" id="sessions-list" aria-label="Scheduled study sessions">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div><!-- /.app-shell -->
+
+<script src="app.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PREMIUM UPGRADE MODAL
+════════════════════════════════════════════════════════════ -->
+<div class="upgrade-overlay" id="upgrade-overlay" role="dialog" aria-modal="true" aria-labelledby="upgrade-modal-title">
+  <div class="upgrade-modal" id="upgrade-modal">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <div class="upgrade-modal__header" id="upgrade-form-section">
+      <button class="upgrade-modal__close" id="upgrade-close-btn" aria-label="Close upgrade modal">✕</button>
+      <span class="upgrade-modal__crown">👑</span>
+      <h2 class="upgrade-modal__title" id="upgrade-modal-title">Unlock NursePrep Premium</h2>
+      <p class="upgrade-modal__sub">Full question bank · Mock exams · Smart analytics · Priority support</p>
+    </div>
+
+    <!-- ── Plan selector ───────────────────────────────────── -->
+    <div class="plan-row" role="group" aria-label="Select a subscription plan">
+
+      <div class="plan-card" data-plan="monthly" id="plan-monthly" role="radio" aria-checked="false" tabindex="0">
+        <div class="plan-card__label">Monthly</div>
+        <div class="plan-card__price">PKR 1,999<span>/mo</span></div>
+        <div class="plan-card__saving">&nbsp;</div>
+      </div>
+
+      <div class="plan-card selected" data-plan="quarterly" id="plan-quarterly" role="radio" aria-checked="true" tabindex="0">
+        <div class="plan-card__badge">⭐ Most Popular</div>
+        <div class="plan-card__label">Quarterly</div>
+        <div class="plan-card__price">PKR 4,999<span>/3 mo</span></div>
+        <div class="plan-card__saving">Save 17%</div>
+      </div>
+
+      <div class="plan-card" data-plan="annual" id="plan-annual" role="radio" aria-checked="false" tabindex="0">
+        <div class="plan-card__label">Annual</div>
+        <div class="plan-card__price">PKR 14,999<span>/yr</span></div>
+        <div class="plan-card__saving">Save 37%</div>
+      </div>
+
+    </div>
+
+    <!-- ── Benefits strip ──────────────────────────────────── -->
+    <div class="upgrade-benefits" aria-label="Premium benefits">
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> Full question bank (847+)</div>
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> Unlimited mock exams</div>
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> NGN Next-Gen Questions</div>
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> Smart weak-spot AI</div>
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> NCLEX · DHA · OMSB</div>
+      <div class="upgrade-benefit"><span class="upgrade-benefit__check">✓</span> Priority support</div>
+    </div>
+
+    <div class="upgrade-divider"></div>
+
+    <!-- ── Payment method tabs ─────────────────────────────── -->
+    <div class="payment-method-tabs" role="tablist" aria-label="Payment method">
+      <button class="pmt-tab active" id="pmt-tab-wallet" role="tab" aria-selected="true" aria-controls="panel-wallet">
+        <span class="pmt-tab__icon">📱</span> Easypaisa / JazzCash
+      </button>
+      <button class="pmt-tab" id="pmt-tab-bank" role="tab" aria-selected="false" aria-controls="panel-bank">
+        <span class="pmt-tab__icon">🏦</span> Direct Bank Transfer / Raast
+      </button>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         WALLET PANEL
+    ═════════════════════════════════════════ -->
+    <div class="payment-panel active" id="panel-wallet" role="tabpanel" aria-labelledby="pmt-tab-wallet">
+
+      <!-- Wallet selector -->
+      <div class="wallet-subtabs" role="group" aria-label="Select mobile wallet">
+        <button class="wallet-tab active" data-wallet="easypaisa" id="wtab-easypaisa" aria-pressed="true">
+          💚 Easypaisa
+        </button>
+        <button class="wallet-tab" data-wallet="jazzcash" id="wtab-jazzcash" aria-pressed="false">
+          🔴 JazzCash
+        </button>
+      </div>
+
+      <!-- Instruction Step and Account Details Card -->
+      <div class="instruction-box">
+        <div class="instruction-step">
+          <span class="step-num">Step 1:</span> Transfer the selected plan amount using your mobile wallet app to the account below.
+        </div>
+      </div>
+
+      <!-- Send-to display (updates dynamically) -->
+      <div class="wallet-send-to" id="wallet-send-to-card" aria-live="polite">
+        <div class="wallet-send-to__icon-bg" id="wallet-icon-bg" style="background:rgba(0,180,80,0.15);">💚</div>
+        <div class="wallet-send-to__info">
+          <div class="wallet-send-to__tag">Send <span id="plan-price-label">PKR 4,999</span> to this <span id="wallet-label">Easypaisa</span> account</div>
+          
+          <!-- Account Phone Number Field -->
+          <div class="account-field-wrap">
+            <span class="account-field-label">Account Phone Number:</span>
+            <span class="wallet-send-to__number" id="wallet-number">0311-2345678</span>
+          </div>
+          
+          <div class="account-field-wrap">
+            <span class="account-field-label">Account Title:</span>
+            <span class="wallet-send-to__name" id="wallet-account-name">NursePrep Payments</span>
+          </div>
+        </div>
+        <button class="wallet-copy-btn" id="wallet-copy-btn" aria-label="Copy wallet number">📋 Copy Number</button>
+      </div>
+
+      <div class="instruction-box" style="margin-top: 12px; margin-bottom: 12px;">
+        <div class="instruction-step">
+          <span class="step-num">Step 2:</span> Enter your transaction details below to verify your payment.
+        </div>
+      </div>
+
+      <!-- Wallet form fields -->
+      <form id="wallet-form" novalidate>
+        <div class="upgrade-field-row">
+          <div class="upgrade-field">
+            <label for="wallet-sender-number">Your <span id="wallet-label">Easypaisa</span> Wallet Number</label>
+            <input type="tel" id="wallet-sender-number" name="sender_number"
+              placeholder="e.g. 0300XXXXXXX" autocomplete="tel" required />
+          </div>
+          <div class="upgrade-field">
+            <label for="wallet-txn-id">Transaction ID (TID)</label>
+            <input type="text" id="wallet-txn-id" name="transaction_id"
+              placeholder="e.g. 8274651" required />
+          </div>
+        </div>
+        <div class="upgrade-field">
+          <label for="wallet-sender-name">Your Full Name (on Account)</label>
+          <input type="text" id="wallet-sender-name" name="sender_name"
+            placeholder="As registered on your mobile wallet" required />
+        </div>
+
+        <button type="submit" class="upgrade-submit-btn" id="wallet-submit-btn">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Submit Payment Verification Request →</span>
+        </button>
+      </form>
+
+    </div><!-- /#panel-wallet -->
+
+    <!-- ════════════════════════════════════════
+         BANK TRANSFER PANEL
+    ═════════════════════════════════════════ -->
+    <div class="payment-panel" id="panel-bank" role="tabpanel" aria-labelledby="pmt-tab-bank">
+
+      <!-- Instruction Step -->
+      <div class="instruction-box" style="margin-bottom: 14px;">
+        <div class="instruction-step">
+          <span class="step-num">Step 1:</span> Send the fee via your Banking App / IBFT or Raast using the bank details below.
+        </div>
+      </div>
+
+      <!-- IBFT bank details card (clear text blocks) -->
+      <div class="bank-details-card">
+        <div class="bank-details-card__head">🏦 Direct Bank Transfer / Raast Details</div>
+        
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">Bank Name</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value">Meezan Bank Limited</span>
+          </div>
+        </div>
+        
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">Account Title</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value">NursePrep Education Services</span>
+          </div>
+        </div>
+        
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">IBAN</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value font-mono highlight-val" id="bank-iban">PK36MEZN0001280104921847</span>
+            <button type="button" class="mini-copy-btn" onclick="navigator.clipboard.writeText('PK36MEZN0001280104921847'); alert('IBAN Copied!');" aria-label="Copy IBAN">📋 Copy</button>
+          </div>
+        </div>
+
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">Account Number</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value font-mono" id="bank-account-num">0128-0104921847</span>
+            <button type="button" class="mini-copy-btn" onclick="navigator.clipboard.writeText('01280104921847'); alert('Account Number Copied!');" aria-label="Copy Account Number">📋 Copy</button>
+          </div>
+        </div>
+
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">Raast ID</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value font-mono highlight-val" id="bank-raast-id">nurseprep@raast</span>
+            <button type="button" class="mini-copy-btn" onclick="navigator.clipboard.writeText('nurseprep@raast'); alert('Raast ID Copied!');" aria-label="Copy Raast ID">📋 Copy</button>
+          </div>
+        </div>
+
+        <div class="bank-detail-block">
+          <span class="bank-detail-label">Reference (Required)</span>
+          <div class="bank-detail-value-wrap">
+            <span class="bank-detail-value font-mono highlight-val" id="bank-plan-ref">QUARTERLY-4999</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instruction Step 2 -->
+      <div class="instruction-box" style="margin-bottom: 12px;">
+        <div class="instruction-step">
+          <span class="step-num">Step 2:</span> Upload a screenshot of your payment receipt and enter your account name below.
+        </div>
+      </div>
+
+      <!-- Receipt upload -->
+      <div class="receipt-dropzone" id="receipt-dropzone"
+           role="button" aria-label="Upload payment receipt screenshot"
+           tabindex="0">
+        <input type="file" id="receipt-file-input"
+               accept="image/jpeg,image/png,image/webp,application/pdf"
+               aria-label="Choose receipt file" />
+        <span class="receipt-dropzone__icon">📎</span>
+        <div class="receipt-dropzone__text">
+          <strong>Click to browse receipt screenshot</strong> or drag &amp; drop it here
+        </div>
+        <div class="receipt-dropzone__hint">JPG, PNG, WEBP or PDF · Max 5 MB</div>
+        <div class="file-preview" id="file-preview">
+          <span>📄</span>
+          <span id="file-preview-name">receipt.jpg</span>
+          <span class="file-preview__remove" id="file-remove-btn" role="button" tabindex="0" aria-label="Remove file">✕</span>
+        </div>
+      </div>
+
+      <!-- Bank form fields -->
+      <form id="bank-form" novalidate>
+        <div class="upgrade-field-row">
+          <div class="upgrade-field">
+            <label for="bank-sender-name">Your Full Account Title / Name</label>
+            <input type="text" id="bank-sender-name" name="sender_name"
+              placeholder="e.g. As registered on bank account" required />
+          </div>
+          <div class="upgrade-field">
+            <label for="bank-sender-email">Email Address (for account notification)</label>
+            <input type="email" id="bank-sender-email" name="sender_email"
+              placeholder="e.g. student@example.com" />
+          </div>
+        </div>
+
+        <button type="submit" class="upgrade-submit-btn" id="bank-submit-btn">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Submit Verification Receipt →</span>
+        </button>
+      </form>
+
+    </div><!-- /#panel-bank -->
+
+    <!-- ── Footer note ─────────────────────────────────────── -->
+    <p class="upgrade-modal__footer">
+      🔒 All payment information is reviewed manually by our team within 24 hours.
+      Once verified, your account will be activated immediately.
+      For support: <strong>support@nurseprep.pk</strong>
+    </p>
+
+    <!-- ── Success screen ──────────────────────────────────── -->
+    <div class="upgrade-success" id="upgrade-success" aria-live="polite">
+      <span class="upgrade-success__icon">🎉</span>
+      <h3 class="upgrade-success__title">Request Received!</h3>
+      <p class="upgrade-success__msg" id="upgrade-success-msg">
+        Your payment proof has been submitted. Our team will verify it within 24 hours
+        and send you a confirmation to activate your Premium account.
+      </p>
+      <div class="upgrade-success__id" id="upgrade-request-id">REQ-XXXXXXXX</div>
+      <br />
+      <button class="upgrade-success__close" id="upgrade-success-close">Close &amp; Continue Studying</button>
+    </div>
+
+  </div><!-- /.upgrade-modal -->
+</div><!-- /.upgrade-overlay -->
+
+</body>
+</html>
