@@ -378,21 +378,21 @@
 
       <div class="plan-card" data-plan="monthly" id="plan-monthly" role="radio" aria-checked="false" tabindex="0">
         <div class="plan-card__label">Monthly</div>
-        <div class="plan-card__price">PKR 1,999<span>/mo</span></div>
+        <div class="plan-card__price">PKR 2,000<span>/mo</span></div>
         <div class="plan-card__saving">&nbsp;</div>
+      </div>
+
+      <div class="plan-card" data-plan="bimonthly" id="plan-bimonthly" role="radio" aria-checked="false" tabindex="0">
+        <div class="plan-card__label">Bi-Monthly</div>
+        <div class="plan-card__price">PKR 3,500<span>/2 mo</span></div>
+        <div class="plan-card__saving">Save 12%</div>
       </div>
 
       <div class="plan-card selected" data-plan="quarterly" id="plan-quarterly" role="radio" aria-checked="true" tabindex="0">
         <div class="plan-card__badge">⭐ Most Popular</div>
         <div class="plan-card__label">Quarterly</div>
-        <div class="plan-card__price">PKR 4,999<span>/3 mo</span></div>
+        <div class="plan-card__price">PKR 5,000<span>/3 mo</span></div>
         <div class="plan-card__saving">Save 17%</div>
-      </div>
-
-      <div class="plan-card" data-plan="annual" id="plan-annual" role="radio" aria-checked="false" tabindex="0">
-        <div class="plan-card__label">Annual</div>
-        <div class="plan-card__price">PKR 14,999<span>/yr</span></div>
-        <div class="plan-card__saving">Save 37%</div>
       </div>
 
     </div>
@@ -481,6 +481,25 @@
               placeholder="e.g. 8274651" required />
           </div>
         </div>
+
+        <!-- Wallet Receipt screenshot upload box -->
+        <div class="upgrade-field">
+          <label>Upload Receipt Screenshot (Recommended)</label>
+          <div class="receipt-dropzone" id="wallet-receipt-dropzone" role="button" aria-label="Upload payment receipt screenshot" tabindex="0">
+            <input type="file" id="wallet-receipt-file-input" accept="image/*" aria-label="Choose receipt file" />
+            <span class="receipt-dropzone__icon">📎</span>
+            <div class="receipt-dropzone__text">
+              <strong>Click to browse image</strong> or drag &amp; drop it here
+            </div>
+            <div class="receipt-dropzone__hint">JPG, PNG, WEBP · Max 5 MB</div>
+            <div class="file-preview" id="wallet-file-preview">
+              <span>📄</span>
+              <span id="wallet-file-preview-name">receipt.jpg</span>
+              <span class="file-preview__remove" id="wallet-file-remove-btn" role="button" tabindex="0" aria-label="Remove file">✕</span>
+            </div>
+          </div>
+        </div>
+
         <div class="upgrade-field">
           <label for="wallet-sender-name">Your Full Name (on Account)</label>
           <input type="text" id="wallet-sender-name" name="sender_name"

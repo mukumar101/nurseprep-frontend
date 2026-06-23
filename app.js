@@ -623,9 +623,9 @@ const WALLETS = {
 
 // ── Plan prices ──────────────────────────────────────────────
 const PLAN_PRICES = {
-  monthly  : { label: "Monthly",   price: "PKR 1,999",  ref: "MONTHLY-1999"   },
-  quarterly: { label: "Quarterly", price: "PKR 4,999",  ref: "QUARTERLY-4999" },
-  annual   : { label: "Annual",    price: "PKR 14,999", ref: "ANNUAL-14999"   },
+  monthly  : { label: "Monthly",    price: "PKR 2,000", ref: "MONTHLY-2000"   },
+  bimonthly: { label: "Bi-Monthly", price: "PKR 3,500", ref: "BIMONTHLY-3500" },
+  quarterly: { label: "Quarterly",  price: "PKR 5,000", ref: "QUARTERLY-5000" },
 };
 
 // ── State ────────────────────────────────────────────────────
@@ -633,7 +633,8 @@ let modalState = {
   selectedPlan  : "quarterly",
   selectedWallet: "easypaisa",
   activeMethod  : "wallet",   // "wallet" | "bank"
-  receiptFile   : null,
+  receiptFile   : null,       // Bank transfer receipt file
+  walletReceiptFile: null,    // Mobile wallet receipt file
 };
 
 // ── Init modal on DOMContentLoaded ───────────────────────────
@@ -720,6 +721,7 @@ function resetModalToForm() {
   document.getElementById("wallet-form")?.reset();
   document.getElementById("bank-form")?.reset();
   clearReceiptFile();
+  clearWalletReceiptFile();
   setButtonLoading("wallet-submit-btn", false);
   setButtonLoading("bank-submit-btn", false);
 }
@@ -813,41 +815,59 @@ function copyWalletNumber() {
 
 // ── File upload (drag & drop) ─────────────────────────────────
 function wireFileUpload() {
+  // --- Bank transfer receipt ---
   const zone    = document.getElementById("receipt-dropzone");
   const input   = document.getElementById("receipt-file-input");
   const preview = document.getElementById("file-preview");
   const nameEl  = document.getElementById("file-preview-name");
   const removeBtn = document.getElementById("file-remove-btn");
 
-  if (!zone) return;
+  if (zone) {
+    zone.addEventListener("click", (e) => {
+      if (!e.target.closest(".file-preview__remove")) input?.click();
+    });
+    zone.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input?.click(); }
+    });
+    zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.classList.add("drag-over"); });
+    zone.addEventListener("dragleave", ()  => zone.classList.remove("drag-over"));
+    zone.addEventListener("drop", (e) => {
+      e.preventDefault(); zone.classList.remove("drag-over");
+      const files = e.dataTransfer?.files;
+      if (files?.[0]) handleFileChosen(files[0]);
+    });
+    input?.addEventListener("change", (e) => {
+      if (e.target.files?.[0]) handleFileChosen(e.target.files[0]);
+    });
+    removeBtn?.addEventListener("click", (e) => { e.stopPropagation(); clearReceiptFile(); });
+  }
 
-  // Click on zone triggers hidden input
-  zone.addEventListener("click", (e) => {
-    if (!e.target.closest(".file-preview__remove")) input?.click();
-  });
-  zone.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input?.click(); }
-  });
+  // --- Wallet transfer receipt (Recommended) ---
+  const wZone    = document.getElementById("wallet-receipt-dropzone");
+  const wInput   = document.getElementById("wallet-receipt-file-input");
+  const wPreview = document.getElementById("wallet-file-preview");
+  const wNameEl  = document.getElementById("wallet-file-preview-name");
+  const wRemoveBtn = document.getElementById("wallet-file-remove-btn");
 
-  // Drag events
-  zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.classList.add("drag-over"); });
-  zone.addEventListener("dragleave", ()  => zone.classList.remove("drag-over"));
-  zone.addEventListener("drop", (e) => {
-    e.preventDefault(); zone.classList.remove("drag-over");
-    const files = e.dataTransfer?.files;
-    if (files?.[0]) handleFileChosen(files[0]);
-  });
-
-  // Input change
-  input?.addEventListener("change", (e) => {
-    if (e.target.files?.[0]) handleFileChosen(e.target.files[0]);
-  });
-
-  // Remove button
-  removeBtn?.addEventListener("click", (e) => { e.stopPropagation(); clearReceiptFile(); });
-  removeBtn?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); clearReceiptFile(); }
-  });
+  if (wZone) {
+    wZone.addEventListener("click", (e) => {
+      if (!e.target.closest(".file-preview__remove")) wInput?.click();
+    });
+    wZone.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); wInput?.click(); }
+    });
+    wZone.addEventListener("dragover", (e) => { e.preventDefault(); wZone.classList.add("drag-over"); });
+    wZone.addEventListener("dragleave", ()  => wZone.classList.remove("drag-over"));
+    wZone.addEventListener("drop", (e) => {
+      e.preventDefault(); wZone.classList.remove("drag-over");
+      const files = e.dataTransfer?.files;
+      if (files?.[0]) handleWalletFileChosen(files[0]);
+    });
+    wInput?.addEventListener("change", (e) => {
+      if (e.target.files?.[0]) handleWalletFileChosen(e.target.files[0]);
+    });
+    wRemoveBtn?.addEventListener("click", (e) => { e.stopPropagation(); clearWalletReceiptFile(); });
+  }
 }
 
 function handleFileChosen(file) {
@@ -866,6 +886,30 @@ function clearReceiptFile() {
   modalState.receiptFile = null;
   const input   = document.getElementById("receipt-file-input");
   const preview = document.getElementById("file-preview");
+  if (input)   input.value = "";
+  if (preview) preview.classList.remove("visible");
+}
+
+function handleWalletFileChosen(file) {
+  if (file.size > 5 * 1024 * 1024) {
+    showModalError("wallet-submit-btn", "File is too large (max 5 MB).");
+    return;
+  }
+  if (!file.type.startsWith("image/")) {
+    showModalError("wallet-submit-btn", "Please upload an image file (JPG, PNG, or WEBP).");
+    return;
+  }
+  modalState.walletReceiptFile = file;
+  const nameEl  = document.getElementById("wallet-file-preview-name");
+  const preview = document.getElementById("wallet-file-preview");
+  if (nameEl)  nameEl.textContent = file.name;
+  if (preview) preview.classList.add("visible");
+}
+
+function clearWalletReceiptFile() {
+  modalState.walletReceiptFile = null;
+  const input   = document.getElementById("wallet-receipt-file-input");
+  const preview = document.getElementById("wallet-file-preview");
   if (input)   input.value = "";
   if (preview) preview.classList.remove("visible");
 }
@@ -904,6 +948,9 @@ async function submitPayment(method) {
     fd.append("sender_number",  document.getElementById("wallet-sender-number")?.value.trim());
     fd.append("transaction_id", document.getElementById("wallet-txn-id")?.value.trim());
     fd.append("sender_name",    document.getElementById("wallet-sender-name")?.value.trim());
+    if (modalState.walletReceiptFile) {
+      fd.append("receipt", modalState.walletReceiptFile, modalState.walletReceiptFile.name);
+    }
   } else {
     fd.append("sender_name",  document.getElementById("bank-sender-name")?.value.trim());
     fd.append("sender_email", document.getElementById("bank-sender-email")?.value.trim());
